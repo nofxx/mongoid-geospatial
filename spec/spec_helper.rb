@@ -2,7 +2,7 @@ require 'pry'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
-MODELS = File.join(File.dirname(__FILE__), "app", "models")
+MODELS = File.join(File.dirname(__FILE__), "models")
 SUPPORT = File.join(File.dirname(__FILE__), "support")
 $LOAD_PATH.unshift(MODELS)
 $LOAD_PATH.unshift(SUPPORT)
@@ -27,15 +27,12 @@ if RUBY_VERSION >= '1.9.2'
   YAML::ENGINE.yamler = 'syck'
 end
 
+puts "version: #{Mongoid::VERSION}"
+
+require 'mongoid_setup'
+
 Mongoid.configure do |config|
-  config.connect_to('mongoid_geo_test')
-  # opts = YAML.load(File.read(File.dirname(__FILE__) + '/support/mongoid.yml'))["test"]
-  # name = opts.delete("database")
-  # host = opts.delete("host")
-  # port = opts.delete("port")
-  # config.master = Mongo::Connection.new(host, port, opts).db(name)
-  # config.logger = nil
-  # config.allow_dynamic_fields = true
+  Mongoid::VersionSetup.configure config
 end
 
 # Autoload every model for the test suite that sits in spec/app/models.
@@ -45,6 +42,10 @@ Dir[ File.join(MODELS, "*.rb") ].sort.each do |file|
 end
 
 Dir[ File.join(SUPPORT, "*.rb") ].each { |file| require File.basename(file) }
+
+def bson_object_id_class
+  Mongoid::VERSION > '3' ? Moped::BSON:: ObjectId : BSON::ObjectId
+end
 
 RSpec.configure do |config|
   config.mock_with(:mocha)

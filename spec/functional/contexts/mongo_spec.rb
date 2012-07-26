@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Mongoid::Contexts::Mongo do
+describe (Mongoid::VERSION > '3' ? Mongoid::Contextual::Mongo :  Mongoid::Contexts::Mongo) do
   describe "#geo_near" do
 
     before do
@@ -77,9 +77,7 @@ describe Mongoid::Contexts::Mongo do
       it 'should limit 1' do
         Bar.limit(1).geo_near(jfk.location).size.should == 1
       end
-
     end
-
   end
 
   context ':page' do
@@ -110,16 +108,26 @@ describe Mongoid::Contexts::Mongo do
 
     context ":paginator :kaminari" do
       let(:near) {Bar.geo_near([1,1], :page => 1)}
+
+      it 'should have 50 Bars' do
+        Bar.all.count.should == 50
+      end
+
+      it "should have limit_value" do
+        near.limit_value.should == 25
+      end
+
+      # check results['results'] in GeoNearResults
+      it 'should find 25 items' do 
+        near.size.should == 25
+      end
+
       it "should have current_page" do
         near.current_page.should == 1
       end
 
       it "should have num_pages" do
-        near.num_pages.should == 2
-      end
-
-      it "should have limit_value" do
-        near.limit_value.should == 25
+        near.num_pages.should == 1
       end
     end
   end

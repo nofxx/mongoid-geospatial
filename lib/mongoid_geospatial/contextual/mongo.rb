@@ -1,6 +1,6 @@
 # encoding: utf-8
 module Mongoid #:nodoc:
-  module Contexts #:nodoc:
+  module Contextual #:nodoc:
     class Mongo #:nodoc:
 
       # Fetches rows from the data base sorted by distance.
@@ -31,7 +31,7 @@ module Mongoid #:nodoc:
       #
       # @return [ Array ] Sorted Rows
       def geo_near(center, opts = {})
-        opts = self.options.merge(opts)
+        opts = self.criteria.options.merge(opts)
         # convert point
         center = center.to_xy if center.respond_to?(:to_xy)
         center = [center.x, center.y] if center.respond_to?(:x)
@@ -68,7 +68,8 @@ module Mongoid #:nodoc:
 
         end
         opts[:query] = create_geo_near_query(center,opts)
-        results = klass.db.command(opts[:query])
+        results = klass.mongo_session.command(opts[:query])
+        
         Mongoid::Geospatial::GeoNearResults.new(klass,results,opts)
       end
 
@@ -76,7 +77,7 @@ module Mongoid #:nodoc:
 
       def create_geo_near_query(center,opts)
         # minimum query
-        query = BSON::OrderedHash.new
+        query = {}
         query[:geoNear] = klass.collection_name
         query[:near] = center
 
@@ -92,8 +93,8 @@ module Mongoid #:nodoc:
         # allow the use of complex werieis
         if opts[:query]
           query['query']         = self.criteria.where(opts[:query]).selector
-        elsif self.selector != {}
-          query['query']         = self.selector
+        elsif self.criteria.selector != {}
+          query['query']         = self.criteria.selector
         end
 
         if opts[:max_distance]
@@ -102,7 +103,7 @@ module Mongoid #:nodoc:
         end
 
         if opts[:unique_docs]
-           query['uniqueDocs'] = true
+            query['uniqueDocs'] = true
         end
 
         query['spherical']  = true if opts[:spherical]

@@ -10,6 +10,13 @@ module Mongoid #:nodoc:
     # becomes:
     # <tt> { :field.lt => "value }</tt>
     class Complex
+      
+      attr_accessor :key, :operator
+      
+      def initialize(opts = {})
+        @key, @operator = opts[:key], opts[:operator]
+      end
+      
 
       def to_mongo_query v
         {"$#{operator}" => v}

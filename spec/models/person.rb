@@ -25,14 +25,24 @@ class Person
   field :owner_id, :type => Integer
   field :security_code
   field :reading, :type => Object
-  field :bson_id, :type => BSON::ObjectId
+  field :bson_id, :type => bson_object_id_class
 
-  index :age
-  index :addresses
-  index :dob
-  index :name
-  index :title
-  index :ssn, :unique => true
+  if Mongoid::VERSION > '3'
+    index age: 1
+    index addresses: 1
+    index dob: 1
+    index name: 1
+    index title: 1
+    index({ssn: 1}, :unique => true)
+    
+  else
+    index :age
+    index :addresses
+    index :dob
+    index :name
+    index :title
+    index :ssn, :unique => true
+  end
 
   validates_format_of :ssn, :without => /\$\$\$/
 
@@ -65,6 +75,39 @@ class Person
   end
   embeds_one :quiz
 
+  has_one :game, :dependent => :destroy do
+    def extension
+      "Testing"
+    end
+  end
+
+  has_many \
+    :posts,
+    :dependent => :delete,
+    :order => :rating.desc do
+    def extension
+      "Testing"
+    end
+  end
+  has_many :paranoid_posts
+  has_and_belongs_to_many \
+    :preferences,
+    :index => true,
+    :dependent => :nullify,
+    :autosave => true,
+    :order => :value.desc
+  has_and_belongs_to_many :user_accounts
+  has_and_belongs_to_many :houses
+
+  has_many :drugs, :autosave => true
+  has_one :account, :autosave => true
+
+  has_and_belongs_to_many \
+    :administrated_events,
+    :class_name => 'Event',
+    :inverse_of => :administrators,
+    :dependent  => :nullify
+    
   accepts_nested_attributes_for :addresses
   accepts_nested_attributes_for :name, :update_only => true
   accepts_nested_attributes_for :pet, :allow_destroy => true
@@ -73,39 +116,7 @@ class Person
   accepts_nested_attributes_for :posts
   accepts_nested_attributes_for :preferences
   accepts_nested_attributes_for :quiz
-
-  references_one :game, :dependent => :destroy do
-    def extension
-      "Testing"
-    end
-  end
-
-  references_many \
-    :posts,
-    :dependent => :delete,
-    :order => :rating.desc do
-    def extension
-      "Testing"
-    end
-  end
-  references_many :paranoid_posts
-  references_and_referenced_in_many \
-    :preferences,
-    :index => true,
-    :dependent => :nullify,
-    :autosave => true,
-    :order => :value.desc
-  references_and_referenced_in_many :user_accounts
-  references_and_referenced_in_many :houses
-
-  references_many :drugs, :autosave => true
-  references_one :account, :autosave => true
-
-  references_and_referenced_in_many \
-    :administrated_events,
-    :class_name => 'Event',
-    :inverse_of => :administrators,
-    :dependent  => :nullify
+    
 
   scope :minor, where(:age.lt => 18)
   scope :without_ssn, without(:ssn)

@@ -12,7 +12,9 @@ class Address
   field :parent_title
   field :services, :type => Array
   field :latlng, :type => Array
-  key :street
+  if Mongoid::VERSION <  '3'
+    key :street
+  end
   embeds_many :locations
 
   embedded_in :addressable, :polymorphic => true do
@@ -26,10 +28,10 @@ class Address
 
   accepts_nested_attributes_for :locations
 
-  referenced_in :account
+  belongs_to :account
 
   scope :without_postcode, where(:postcode => nil)
-  named_scope :rodeo, where(:street => "Rodeo Dr") do
+  scope :rodeo, where(:street => "Rodeo Dr") do
     def mansion?
       all? { |address| address.street == "Rodeo Dr" }
     end
