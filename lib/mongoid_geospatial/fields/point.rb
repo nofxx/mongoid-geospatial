@@ -22,8 +22,7 @@ module Mongoid
 
         # Database -> Object
         def demongoize(object)
-          # return unless object && !object.empty?
-          Point.new(object[0], object[1])
+          Point.new(object[0], object[1]) rescue nil
         end
 
         def mongoize(object)
