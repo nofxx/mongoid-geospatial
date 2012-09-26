@@ -28,8 +28,8 @@ module Mongoid
     included do
       # attr_accessor :geo
       cattr_accessor :spatial_fields, :spatial_fields_indexed
-      @@spatial_fields = []
-      @@spatial_fields_indexed = []
+      self.spatial_fields = []
+      self.spatial_fields_indexed = []
     end
 
     def self.use_rgeo
