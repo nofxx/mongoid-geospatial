@@ -14,7 +14,6 @@ There are no plans to support MongoDB < 2.0
 There are no plans to support Mongoid <= 2.0
 
 
-
 Quick Start
 -----------
 
@@ -44,10 +43,31 @@ You can also use an external Geometric/Spatial alongside.
     end
 
 
+For geo points, an extra macro `geo_field` is available
+
+
+    class Place
+      include Mongoid::Document
+      include Mongoid::Geospatial
+      
+      # field :location, type: Point, spatial: true
+      geo_field :location
+    end
+
+
 Generate indexes on MongoDB:
 
 
     rake db:mongoid:create_indexes
+
+
+Index programatically via https://github.com/kristianmandrup/mongoid_indexing gem
+
+
+    Mongoid::Indexing.create_indexes
+
+
+This is fx useful when running specs or when working with spatials on a gem or engine.
 
 
 Points

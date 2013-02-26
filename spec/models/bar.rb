@@ -3,10 +3,10 @@ class Bar
   include Mongoid::Geospatial
 
   field :name,     :type => String
-  field :location, :type => Point, :spatial => true
+  
+  geo_field :location
 
   has_one :rating, :as => :ratable
 
   spatial_scope :location
-
 end

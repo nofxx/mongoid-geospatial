@@ -41,6 +41,9 @@ module Mongoid
     end
 
     module ClassMethods #:nodoc:
+      def geo_field name, options = {}
+        field name, {type: Mongoid::Geospatial::Point, spatial: true}.merge(options)
+      end
 
       # create spatial index for given field
       # @param [String,Symbol] name
