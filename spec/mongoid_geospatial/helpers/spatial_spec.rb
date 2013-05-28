@@ -8,7 +8,7 @@ describe Mongoid::Fields do
     end
 
     it "should created indexes" do
-      Bar.index_options.keys.should include({'location' => '2d'})
+      Bar.index_options.keys.should include({:location => '2d'})
     end
 
     it "should set spatial fields" do
