@@ -22,12 +22,12 @@ describe Mongoid::Geospatial::Line do
 
     it "should have a center point" do
       geom = Mongoid::Geospatial::Line.new [[1,1],[1,1],[9,9],[9,9]]
-      geom.center.should eq([5.5,5.5])
+      geom.center.should eq([5.0,5.0])
     end
 
     it "should have a radius helper" do
       geom = Mongoid::Geospatial::Line.new [[1,1],[1,1],[9,9],[9,9]]
-      geom.radius(10).should eq([[5.5,5.5], 10])
+      geom.radius(10).should eq([[5.0,5.0], 10])
     end
 
     it "should have a radius sphere" do

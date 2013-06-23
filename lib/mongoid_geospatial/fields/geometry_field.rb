@@ -17,7 +17,7 @@ module Mongoid
 
       def center_point
         min, max = *bbox
-        [min[0] + max[0] / 2.0, min[1] + max[1] / 2.0]
+        [(min[0] + max[0]) / 2.0, (min[1] + max[1]) / 2.0]
       end
       alias :center :center_point
 
