@@ -5,7 +5,6 @@ module Mongoid
   module Geospatial
 
     class Point
-
       def to_geo
         RGeo::Geographic.spherical_factory.point x, y
       end
@@ -25,23 +24,27 @@ module Mongoid
       end
     end
 
+    class GeometryField
+      private
+      def points
+        self.map do |pair|
+          RGeo::Geographic.spherical_factory.point(*pair)
+        end
+      end
+    end
 
     class Line < GeometryField
       def to_geo
-        RGeo::Geographic.spherical_factory.line_string self
+        RGeo::Geographic.spherical_factory.line_string points
       end
 
     end
 
     class Polygon < GeometryField
       def to_geo
-        points = self.map do |pair|
-          RGeo::Geographic.spherical_factory.point *pair
-        end
         ring = RGeo::Geographic.spherical_factory.linear_ring points
         RGeo::Geographic.spherical_factory.polygon ring
       end
-
     end
   end
 end

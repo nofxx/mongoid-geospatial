@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Mongoid::Geospatial::Point do
 
-  it "should not inferfer with mongoid" do
+  it "should not interfer with mongoid" do
     Bar.create!(name: "Moe's")
     Bar.count.should eql(1)
   end

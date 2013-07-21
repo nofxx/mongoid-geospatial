@@ -10,7 +10,7 @@ describe Mongoid::Geospatial::Point do
     load "#{File.dirname(__FILE__)}/../../models/place.rb"
   end
 
-  it "should not inferfer with mongoid" do
+  it "should not interfer with mongoid" do
     Place.create!(name: "Moe's")
     Place.count.should eql(1)
   end
