@@ -67,7 +67,7 @@ Place.create_indexes
 Points
 ------
 
-This gem defines a specific Point class under the Mongoid::Geospatial namespace. Make sure to use `type: ::Mongoid::Geospatial::Point` to avoid name errors or collisions with other Point class you might already have defined `NameError`s
+This gem defines a specific `Point` class under the Mongoid::Geospatial namespace. Make sure to use `type: ::Mongoid::Geospatial::Point` to avoid name errors or collisions with other `Point` classes you might already have defined `NameError`s
 
 Currently, MongoDB supports query operations on 2D points only, so that's what this lib does. All geometries apart from points are just arrays in the database. Here's is how you can input a point as:
 
@@ -76,7 +76,7 @@ Currently, MongoDB supports query operations on 2D points only, so that's what t
 * an ordered hash with longitude as the first item and latitude as the second item; this hash does not have include the latitude and longitude keys
 * anything with the a method #to_xy or #to_lng_lat that converts itself to  [long, lat] array
 
-_Note : the convention of having longitude as the first coordinate may vary for other libraries. For instance, Google Maps often refer to "LatLng". Make sure you keep those differences in mind_
+_Note: the convention of having longitude as the first coordinate may vary for other libraries. For instance, Google Maps often refer to "LatLng". Make sure you keep those differences in mind._
 
 We store data in the DB as a [x, y] array then reformat when it is returned to you
 
