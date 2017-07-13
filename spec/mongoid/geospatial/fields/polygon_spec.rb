@@ -45,7 +45,7 @@ describe Mongoid::Geospatial::Polygon do
 
       geom = Mongoid::Geospatial::Polygon.new(document)
 
-      expect([*geom]).to eq(corrdinates)
+      expect([*geom]).to eq(coordinates)
     end
 
     describe 'with rgeo' do
