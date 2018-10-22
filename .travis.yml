@@ -17,8 +17,6 @@ before_script:
 
 addons:
   apt:
-    sources:
-      - [mongodb-3.2-trusty, mongodb-3.4-trusty]
     packages:
       - mongodb-org-server
 
