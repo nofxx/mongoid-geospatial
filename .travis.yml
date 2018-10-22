@@ -27,12 +27,12 @@ env:
 
 matrix:
   include:
-    - name: "MongoDB 3.2"
+    - name: "MongoDB-3.2"
       addons:
         apt:
           sources:
             - mongodb-3.2-trusty
-    - name: "MongoDB 3.4"
+    - name: "MongoDB-3.4"
       addons:
         apt:
           sources:
